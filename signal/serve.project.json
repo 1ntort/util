@@ -1,0 +1,20 @@
+{
+  "name": "signal",
+  "tree": {
+    "$className": "DataModel",
+    
+    "ServerScriptService": {
+        "$ignoreUnknownInstances": true,
+        "signal": {
+            "$className": "Folder",
+            "$ignoreUnknownInstances": false,
+            "src": {
+                "$path": "default.project.json"
+            },
+            "test": {
+                "$path": "test"
+            }
+        }
+    }
+  }
+}

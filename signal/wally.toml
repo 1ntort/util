@@ -1,0 +1,12 @@
+[package]
+name = "1ntort/signal"
+description = "a really good signal module i made in a day"
+version = "1.0.1"
+authors = ["1ntort <>"]
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+exclude = ["**"]
+include = ["src", "src/*", "default.project.json", "wally.lock", "wally.toml"]
+
+[dependencies]
