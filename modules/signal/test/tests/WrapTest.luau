@@ -3,7 +3,7 @@
 
 local ServerStorage = game:GetService("ServerStorage")
 
-local Type = require("./Type")
+local Type = require("../Type")
 
 type Test = Type.Test
 type TestData = Type.TestData

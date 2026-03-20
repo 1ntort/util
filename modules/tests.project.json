@@ -1,0 +1,9 @@
+{
+    "name": "modules",
+    "tree": {
+        "$className": "Folder",
+        "signal": {
+            "$path": "signal/test.project.json"
+        }
+    }
+}

@@ -1,7 +1,7 @@
 --!strict
 --!optimize 2
 
-local Type = require("./Type")
+local Type = require("../Type")
 
 type Test = Type.Test
 type TestData = Type.TestData

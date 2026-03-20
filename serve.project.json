@@ -1,0 +1,16 @@
+{
+  "name": "util",
+  "tree": {
+    "$className": "DataModel",
+    
+    "ServerScriptService": {
+        "$ignoreUnknownInstances": true,
+        "modules": {
+          "$path": "modules/tests.project.json"
+        },
+        "testrunner": {
+          "$path": "testrunner"
+        }
+    }
+  }
+}

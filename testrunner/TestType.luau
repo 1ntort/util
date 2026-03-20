@@ -1,20 +1,12 @@
 --!strict
 
-local MODULE = require("../src")
-
---// TYPES
-
-export type Test = {
+export type Test<TestData> = {
     name: string,
     priority: TestPriority,
-    run: TestFunction,
+    run: TestFunction<TestData>,
 }
 
-export type TestFunction = (TestData) -> TestResult
-
-export type TestData = {
-    
-}
+export type TestFunction<TestData> = (TestData) -> TestResult
 
 export type TestResult = {
     success: boolean,
