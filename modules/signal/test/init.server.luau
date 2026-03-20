@@ -17,18 +17,9 @@ export type TestResult = Type.TestResult
 
 TestRegistrar.instance():schedule(name)
 
-local tests: { Test } = {}
-for _, module: ModuleScript in script.tests:GetChildren() do
-    tests[#tests + 1] = require(module) :: Test
-end
-
 local data: TestData = {
-    module = Signal,
-    instance = Signal.new(),
+	module = Signal,
+	instance = Signal.new(),
 }
 
-TestRegistrar.instance():register({
-    name = name,
-    tests = tests,
-    data = data,
-})
+TestRegistrar.instance():registerAll(name, data, script.tests)

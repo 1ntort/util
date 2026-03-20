@@ -11,8 +11,8 @@ export type TestFunction = TestType.TestFunction<TestData>
 export type TestResult = TestType.TestResult
 
 export type TestData = {
-    module: typeof(Signal),
-    instance: Signal,
+	module: typeof(Signal),
+	instance: Signal,
 }
 
 return {}

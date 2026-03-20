@@ -1,12 +1,12 @@
 {
   "name": "signal",
   "tree": {
-    "$className": "Folder",
-    "src": {
-      "$path": "src"
-    },
-    "test": {
-      "$path": "test"
-    }
+	"$className": "Folder",
+	"src": {
+	  "$path": "src"
+	},
+	"test": {
+	  "$path": "test"
+	}
   }
 }
