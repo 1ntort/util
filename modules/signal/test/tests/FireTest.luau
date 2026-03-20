@@ -21,6 +21,6 @@ local test: Test = {
 			success = success,
 			result = result,
 		}
-	end
+	end,
 }
 return test

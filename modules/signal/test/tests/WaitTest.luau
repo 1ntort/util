@@ -16,13 +16,13 @@ local test: Test = {
 			if argument ~= "TEST_ARGUMENT" then
 				error("signal was fired, however the incorrect arguments were passed")
 			end
-			
+
 			return nil
 		end)
 		return {
 			success = success,
 			result = result,
 		}
-	end
+	end,
 }
 return test

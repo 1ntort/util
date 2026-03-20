@@ -20,15 +20,11 @@ local function checkExcluded(name: string): boolean
 		elseif EXCLUDED == name then
 			return true
 		elseif string.match(EXCLUDED, "^%-%a+") then
-			if EXCLUDED == `-{name}` then
-				return false
-			end
+			if EXCLUDED == `-{name}` then return false end
 			return true
 		end
 	elseif typeof(EXCLUDED) == "table" then
-		if EXCLUDED[name] == true then
-			return true
-		end
+		if EXCLUDED[name] == true then return true end
 	end
 	return false
 end
@@ -84,7 +80,9 @@ for _, registered: Registered<any> in registrar._registered do
 		end
 	end)
 
-	repeat task.wait() until stopped == true or done >= total
+	repeat
+		task.wait()
+	until stopped == true or done >= total
 	if stopped == true then return end
 	print(`{prefix} a total of {passed} / {total} tests passed`)
 end

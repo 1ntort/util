@@ -7,10 +7,8 @@ local function threadBody()
 	local func: (...any) -> (), args: { any }
 	func, args = coroutine.yield()
 	while true do
-		local success: boolean, result: string? = pcall((func :: (...any) -> (...any)), table.unpack(args))
-		if success == false then
-			warn(debug.traceback("error while firing a connection; " .. tostring(result), 2))
-		end
+		local success: boolean, result: string? = pcall(func :: (...any) -> ...any, table.unpack(args))
+		if success == false then warn(debug.traceback("error while firing a connection; " .. tostring(result), 2)) end
 		freeThreads[#freeThreads + 1] = coroutine.running()
 		func, args = coroutine.yield()
 	end
@@ -52,9 +50,7 @@ function Connection:disconnect()
 
 	this._connected = false
 	local index: number? = table.find(this._signal._connections, this)
-	if index ~= nil then
-		this._signal._connections[index] = nil
-	end
+	if index ~= nil then this._signal._connections[index] = nil end
 
 	local thread: thread = this._signal._yieldedThreads[this]
 	if thread ~= nil then
@@ -86,9 +82,7 @@ end
 
 function Signal.wrap(rbxSignal: RBXScriptSignal): Signal
 	local instance: Signal = Signal.new()
-	instance._proxyHandler = rbxSignal:Connect(function(...)
-		instance:fire(...)
-	end)
+	instance._proxyHandler = rbxSignal:Connect(function(...) instance:fire(...) end)
 
 	return instance
 end
@@ -168,9 +162,7 @@ function Signal:wait(): ...any
 	connection = this:once(function(...: any)
 		this._yieldedThreads[connection] = nil
 
-		if coroutine.status(thread) == "suspended" then
-			task.spawn(thread, ...)
-		end
+		if coroutine.status(thread) == "suspended" then task.spawn(thread, ...) end
 	end)
 
 	this._yieldedThreads[connection] = thread

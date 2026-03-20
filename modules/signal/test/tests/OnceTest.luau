@@ -15,16 +15,12 @@ local test: Test = {
 			local fired: number, correctArgument: boolean = 0, false
 			local connection = data.instance:once(function(argument: string)
 				fired += 1
-				if argument == "TEST_ARGUMENT" then
-					correctArgument = true
-				end
+				if argument == "TEST_ARGUMENT" then correctArgument = true end
 			end)
 
 			task.wait(2)
 			connection:disconnect()
-			if fired > 1 then
-				error("signal was fired more than once")
-			end
+			if fired > 1 then error("signal was fired more than once") end
 			if correctArgument == false then
 				error("signal was fired once, however the incorrect arguments were passed")
 			end
@@ -35,6 +31,6 @@ local test: Test = {
 			success = success,
 			result = result,
 		}
-	end
+	end,
 }
 return test

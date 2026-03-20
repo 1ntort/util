@@ -42,9 +42,7 @@ function TestRegistrar.new(): TestRegistrar
 	return instance
 end
 
-function TestRegistrar.instance(): TestRegistrar
-	return globalInstance or TestRegistrar.new()
-end
+function TestRegistrar.instance(): TestRegistrar return globalInstance or TestRegistrar.new() end
 
 function TestRegistrar:registerAll<TestData>(name: string, data: TestData, testsFolder: Folder)
 	local this: TestRegistrar = self :: any
@@ -83,15 +81,15 @@ function TestRegistrar:register<TestData>(registered: Registered<TestData>)
 
 	this._registered[#this._registered + 1] = registered
 	this._names[registered.name] = true
-	if add == true then this._done += 1 end
+	if add == true then
+		this._done += 1
+	end
 end
 
 function TestRegistrar:schedule(name: string)
 	local this: TestRegistrar = self :: any
 
-	if this._scheduled[name] == true then
-		warn(`'{tostring(name)}' has already been scheduled`)
-	end
+	if this._scheduled[name] == true then warn(`'{tostring(name)}' has already been scheduled`) end
 
 	this._scheduled[name] = true
 	this._expected += 1
@@ -102,19 +100,13 @@ function TestRegistrar:yield()
 
 	local stopped: boolean = false
 	task.delay(3, function()
-		if this._done < this._expected then
-			warn("stopped yielding due to taking over 3 seconds")
-		end
+		if this._done < this._expected then warn("stopped yielding due to taking over 3 seconds") end
 		stopped = true
 	end)
 
-	repeat task.wait() until 
-		(
-			this._done >= this._expected
-			and this._done ~= 0
-			and this._expected ~= 0
-		)
-		or stopped == true
+	repeat
+		task.wait()
+	until (this._done >= this._expected and this._done ~= 0 and this._expected ~= 0) or stopped == true
 end
 
 return TestRegistrar

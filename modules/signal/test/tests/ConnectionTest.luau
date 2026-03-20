@@ -15,16 +15,14 @@ local test: Test = {
 			local fired: boolean, correctArgument: boolean = false, false
 			local connection = data.instance:connect(function(argument: string)
 				fired = true
-				if argument == "TEST_ARGUMENT" then
-					correctArgument = true
-				end
+				if argument == "TEST_ARGUMENT" then correctArgument = true end
 			end)
 
-			repeat task.wait() until fired == true
+			repeat
+				task.wait()
+			until fired == true
 			connection:disconnect()
-			if correctArgument == false then
-				error("signal was fired, however the incorrect arguments were passed")
-			end
+			if correctArgument == false then error("signal was fired, however the incorrect arguments were passed") end
 
 			return nil
 		end)
@@ -32,6 +30,6 @@ local test: Test = {
 			success = success,
 			result = result,
 		}
-	end
+	end,
 }
 return test
