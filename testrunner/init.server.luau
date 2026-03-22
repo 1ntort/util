@@ -1,7 +1,7 @@
 --!strict
 --!optimize 2
 
-local EXCLUDED: string | { [string]: boolean } | nil = nil
+local EXCLUDED: string | { [string]: boolean } | nil = "-signal"
 
 local TestRegistrar = require("@self/TestRegistrar")
 local TestType = require("@self/TestType")

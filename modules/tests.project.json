@@ -2,6 +2,9 @@
 	"name": "modules",
 	"tree": {
 		"$className": "Folder",
+		"networker": {
+			"$path": "networker/test.project.json"
+		},
 		"signal": {
 			"$path": "signal/test.project.json"
 		}

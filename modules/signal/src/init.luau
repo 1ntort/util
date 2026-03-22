@@ -30,12 +30,12 @@ local Connection = {}
 Connection.__index = Connection
 
 export type Connection = setmetatable<{
-	_signal: Signal,
+	_signal: Signal<...any>,
 	_func: (...any) -> (),
 	_connected: boolean,
 }, { __index: typeof(Connection) }>
 
-function Connection.new(signal: Signal, func: (...any) -> ()): Connection
+function Connection.new(signal: Signal<...any>, func: (...any) -> ()): Connection
 	local instance: Connection = setmetatable({} :: any, Connection)
 
 	instance._signal = signal
@@ -65,14 +65,23 @@ end
 local Signal = {}
 Signal.__index = Signal
 
-export type Signal = setmetatable<{
+export type Signal<T...> = setmetatable<{
 	_connections: { Connection },
 	_yieldedThreads: { [Connection]: thread },
 	_proxyHandler: RBXScriptConnection?,
-}, { __index: typeof(Signal) }>
+}, { __index: {
+	connect: (self: Signal<T...>, (T...) -> ()) -> Connection,
+	once: (self: Signal<T...>, (T...) -> ()) -> Connection,
+	getConnections: (self: Signal<T...>) -> { Connection },
+	disconnectAll: (self: Signal<T...>) -> (),
+	fire: (self: Signal<T...>, T...) -> (),
+	fireDeferred: (self: Signal<T...>, T...) -> (),
+	wait: (self: Signal<T...>) -> (),
+	destroy: (self: Signal<T...>) -> (),
+} }>
 
-function Signal.new(): Signal
-	local instance: Signal = setmetatable({} :: any, Signal)
+function Signal.new<T...>(): Signal<T...>
+	local instance: Signal<T...> = setmetatable({} :: any, Signal)
 
 	instance._connections = {}
 	instance._yieldedThreads = {}
@@ -80,15 +89,15 @@ function Signal.new(): Signal
 	return instance
 end
 
-function Signal.wrap(rbxSignal: RBXScriptSignal): Signal
-	local instance: Signal = Signal.new()
+function Signal.wrap<T...>(rbxSignal: RBXScriptSignal): Signal<T...>
+	local instance: Signal<T...> = Signal.new()
 	instance._proxyHandler = rbxSignal:Connect(function(...) instance:fire(...) end)
 
 	return instance
 end
 
-function Signal:connect(func: (...any) -> ()): Connection
-	local this: Signal = self :: any
+function Signal:connect<T...>(func: (T...) -> ()): Connection
+	local this: Signal<T...> = self :: any
 
 	local connection: Connection = Connection.new(this, func)
 	this._connections[#this._connections + 1] = connection
@@ -96,13 +105,13 @@ function Signal:connect(func: (...any) -> ()): Connection
 	return connection
 end
 
-function Signal:once(func: (...any) -> ()): Connection
-	local this: Signal = self :: any
+function Signal:once<T...>(func: (T...) -> ()): Connection
+	local this: Signal<T...> = self :: any
 
 	local connection: Connection
 	local done: boolean = false
 
-	connection = this:connect(function(...: any)
+	connection = this:connect(function(...: T...)
 		if done then
 			connection:disconnect()
 			return
@@ -114,18 +123,18 @@ function Signal:once(func: (...any) -> ()): Connection
 	return connection
 end
 
-function Signal:getConnections(): { Connection }
-	local this: Signal = self :: any
+function Signal:getConnections<T...>(): { Connection }
+	local this: Signal<T...> = self :: any
 
-	local new = {}
+	local new: { Connection } = {}
 	for key: number, connection: Connection in this._connections do
 		new[key] = connection
 	end
 	return new
 end
 
-function Signal:disconnectAll()
-	local this: Signal = self :: any
+function Signal:disconnectAll<T...>()
+	local this: Signal<T...> = self :: any
 
 	for _, connection: Connection in this._connections do
 		connection:disconnect()
@@ -133,8 +142,8 @@ function Signal:disconnectAll()
 	this._connections = {}
 end
 
-function Signal:fire(...: any)
-	local this: Signal = self :: any
+function Signal:fire<T...>(...: T...)
+	local this: Signal<T...> = self :: any
 
 	for _, connection: Connection in this._connections do
 		if connection._connected == false then continue end
@@ -142,35 +151,35 @@ function Signal:fire(...: any)
 	end
 end
 
-function Signal:fireDeferred(...: any)
-	local this: Signal = self :: any
+function Signal:fireDeferred<T...>(...: T...)
+	local this: Signal<T...> = self :: any
 
 	for _, connection: Connection in this._connections do
-		task.defer(function(...: any)
+		task.defer(function(...: T...)
 			if connection._connected == false then return end
 			connection._func(...)
 		end, ...)
 	end
 end
 
-function Signal:wait(): ...any
-	local this: Signal = self :: any
+function Signal:wait<T...>()
+	local this: Signal<T...> = self :: any
 
 	local thread: thread = coroutine.running()
 
 	local connection: Connection
-	connection = this:once(function(...: any)
+	connection = this:once(function(...: T...)
 		this._yieldedThreads[connection] = nil
 
-		if coroutine.status(thread) == "suspended" then task.spawn(thread, ...) end
+		if coroutine.status(thread) == "suspended" then task.spawn(thread) end
 	end)
 
 	this._yieldedThreads[connection] = thread
-	return coroutine.yield()
+	coroutine.yield()
 end
 
-function Signal:destroy()
-	local this: Signal = self :: any
+function Signal:destroy<T...>()
+	local this: Signal<T...> = self :: any
 
 	this:disconnectAll()
 	if this._proxyHandler ~= nil then this._proxyHandler:Disconnect() end

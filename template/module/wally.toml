@@ -1,7 +1,7 @@
 [package]
-name = "1ntort/signal"
-description = "Basic implementation of the classic 'signal' module."
-version = "1.1.0"
+name = "1ntort/MODULE"
+description = ""
+version = "1.0.0"
 authors = ["1ntort <>"]
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"

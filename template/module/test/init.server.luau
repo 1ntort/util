@@ -3,7 +3,7 @@
 
 local name = "signal"
 
-local Signal = require("./src")
+local MODULE = require("./src")
 local TestRegistrar = require("../../testrunner/TestRegistrar")
 local Type = require("@self/Type")
 
@@ -11,9 +11,6 @@ type TestData = Type.TestData
 
 TestRegistrar.instance():schedule(name)
 
-local data: TestData = {
-	module = Signal,
-	instance = Signal.new(),
-}
+local data: TestData = {}
 
 TestRegistrar.instance():registerAll(name, data, script.tests)

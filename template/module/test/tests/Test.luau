@@ -11,11 +11,7 @@ local test: Test = {
 	name = script.Name,
 	priority = "HIGH",
 	run = function(data: TestData): TestResult
-		local success: boolean, result: string? = pcall(function()
-			data.instance:wait()
-
-			return nil
-		end)
+		local success: boolean, result: string? = pcall(function() return nil end)
 		return {
 			success = success,
 			result = result,
